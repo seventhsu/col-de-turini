@@ -1,6 +1,6 @@
 # col-de-turini
 
-Col de Turini is a famous driving road in the French Alps, and this program is true to its name: something that traverses a mountain. col-de-turini is designed to find the optimal solution to a game of Pyramid Solitaire.
+The Col de Turini is a famous driving road in the French Alps, and this program is true to its name: something that traverses mountains. col-de-turini is designed to find the optimal solution to a game of Pyramid Solitaire.
 
 Pyramid Solitaire is a 1-player card game/puzzle where the object is to clear the entire board by matching cards whose values add to 13. The difficulty lies in the order the decisions are made. Match one pair and not another another early on in the game, and it could end in a loss due to a lack of valid moves later.
 
