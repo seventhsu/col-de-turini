@@ -1,10 +1,14 @@
 #include "Pyramid.hpp"
 
+<<<<<<< HEAD
 /* Initialises the table (the pyramid and the stock) given a file with card values in it.
  * Card file can be written in 1-13 or A-JQK, as long as the structure is a correctly shaped pyramid.
  */
 Pyramid::Pyramid(std::string fileloc) {
 	std::ifstream fs(fileloc);
+=======
+void Pyramid::initPyramid(std::string fileloc) {
+>>>>>>> bf2104c64bdbb0bed274c90ad1292ded2392566a
     // Init array of row arrays
     pyramidArr = (int**) malloc(7 * sizeof(int*));
 
