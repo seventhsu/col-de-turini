@@ -1,7 +1,7 @@
 #include "Pyramid.hpp"
 
 void Pyramid::initPyramid(std::string fileloc) {
-	// Init array of row arrays
+    // Init array of row arrays
     pyramidArr = (int**) malloc(7 * sizeof(int*));
     // Init each row array with its correct size to make a pyramid
     for (int r = 0; r < 7; r++) {
