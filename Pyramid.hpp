@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -29,10 +30,10 @@ typedef struct MatchTreeNodeStruct {
 
 class Pyramid {
 	public:
-		void initPyramid(std::string fileloc);
+		Pyramid(std::string fileloc);
 	private:
 		int** pyramidArr; // A pyramidal "2-D" array. pyramidArr[0] has 1 element, pyramidArr[1] has 2, etc.
-		std::map<int, int> stock; // arg0 is card face value (1-13), arg1 is how many in stock
+		std::map<int, int> *stock; // arg0 is card face value (1-13), arg1 is how many in stock
 
 		std::vector<Card> touchables; // Locations of all pyramid cards which are not covered off by other cards
 		MatchNode *moveTree;
