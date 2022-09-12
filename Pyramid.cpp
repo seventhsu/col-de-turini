@@ -4,7 +4,7 @@
  * Card file can be written in 1-13 or A-JQK, as long as the structure is a correctly shaped pyramid.
  */
 Pyramid::Pyramid(std::string fileloc) {
-	std::ifstream fs(fileloc);
+    std::ifstream fs(fileloc);
     // Init array of row arrays
     pyramidArr = (int**) malloc(7 * sizeof(int*));
 
@@ -37,7 +37,7 @@ Pyramid::Pyramid(std::string fileloc) {
     }
 
     // Initialize the stock
-    stock = new std::vector<int>;
+    stock = new std::vector<int>();
     std::string stockstr;
     std::getline(fs, stockstr);
     std::istringstream iss(stockstr);
@@ -65,11 +65,34 @@ Pyramid::~Pyramid() {
     delete stock;
 }
 
-// We pass the list of moves made so far to construct the state of the game at each recursion
-MatchNode* Pyramid::constructMatchTree(std::vector<CardPair> moveList) {
-    // Reconstruct game state (i.e. touchables and stock) from move list
-    // Enumerate all valid combinations of P-P, P-S, S-S (P = pyramid, S = stock)
+/* We pass the list of moves made so far to construct the state of the game at each recursion
+ * Default arg is NULL for a game with no matches made already
+ */
+MatchNode* Pyramid::buildMatchTree(std::vector<CardPair*> *moveList) {
+    // Touchable cards on the pyramid always start as the bottom row and nothing else
+    std::vector<Card*> *touchables = new std::vector<Card*>();
+    for (int i = 0; i < 7; i++) touchables->push_back(new Card{.row = 6, .pos = i});
+    // Make copy of the starting stock to modify
+    std::vector<int> *currentStock = new std::vector<int>(*stock);
+    
+    // Go through all moves made and reconstruct the game state in touchables and currentStock
+    for (CardPair* move : *moveList) {
+        // Just make sure the cards sum to 13, just in case...
+        if (pyramidArr[move->card1.row][move->card1.pos] + pyramidArr[move->card2.row][move->card2.pos] != 13) {
+            std::cerr << "Fundamental moveList error! Cards in move do not sum to 13" << std::endl;
+            exit(1);
+        }
+
+    }
+    
+    // For all valid combinations of cards on either the pyramid or the stock:
     // Init each one as a node in this vector's nextlist
+    
+    // Done calculating the game state, so we can free some space up on the stack
+    delete touchables;
+    delete stock;
+
     // Loop over nextlist again and recurse for each one (breadth-first strat)
+
     return NULL;
 }

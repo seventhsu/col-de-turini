@@ -35,10 +35,11 @@ class Pyramid {
 	public:
 		Pyramid(std::string fileloc);
 		~Pyramid();
-		MatchNode* constructMatchTree(std::vector<CardPair> moveList);
+		MatchNode* buildMatchTree(std::vector<CardPair*> *moveList);
 	private:
 		int** pyramidArr; // A pyramidal "2-D" array. pyramidArr[0] has 1 element, pyramidArr[1] has 2, etc.
 		std::vector<int> *stock; // The stock is ordered: we cannot just match any two cards inside it
 
+		// The tree of all possible moves. This is the big boy right here
 		MatchNode *matchTree;
 };

@@ -6,4 +6,4 @@ Pyramid solitaire is a 1-player card game/puzzle that operates on a "pyramid", 7
 
 col-de-turini forever changes Pyramid solitaire by analysing the starting state of the game, building a tree of all possible places where move decisions could cause divergences in game traces, and calculating which path(s) win the game and net the best score.
 
-col-de-turini is written entirely from scratch in C++.
+col-de-turini is written entirely from scratch in C++. Give it a pyramid of cards and a stock (first card being the top card) in a text file and run main.cpp.
