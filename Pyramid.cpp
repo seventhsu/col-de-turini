@@ -6,12 +6,12 @@
 Pyramid::Pyramid(std::string fileloc) {
     std::ifstream fs(fileloc);
     // Init array of row arrays
-    pyramidArr = (int**) malloc(7 * sizeof(int*));
+    pyramidArr = new int*[7];
 
     // Loop over rows
     for (int r = 0; r < 7; r++) {
         // Malloc space for each pyramid row, just in time
-        pyramidArr[r] = (int*) malloc((r + 1) * sizeof(int));
+        pyramidArr[r] = new int[r + 1];
         
         // Get line of text from file and put it in a stringstream
         std::string row;
@@ -60,8 +60,7 @@ Pyramid::Pyramid(std::string fileloc) {
 }
 
 Pyramid::~Pyramid() {
-    for (int i = 0; i < 7; i++) delete pyramidArr[i];
-    delete pyramidArr;
+    delete[] pyramidArr; // This is probably enough to delete everything, check with Valgrind later
     delete stock;
 }
 
@@ -69,30 +68,60 @@ Pyramid::~Pyramid() {
  * Default arg is NULL for a game with no matches made already
  */
 MatchNode* Pyramid::buildMatchTree(std::vector<CardPair*> *moveList) {
-    // Touchable cards on the pyramid always start as the bottom row and nothing else
-    std::vector<Card*> *touchables = new std::vector<Card*>();
-    for (int i = 0; i < 7; i++) touchables->push_back(new Card{.row = 6, .pos = i});
+    // Create an exact copy of pyramidArr to operate on
+    int** replicaPyramid = new int*[7]; // 7 rows
+    for (int r = 0; r < 7; r++) {
+        replicaPyramid[r] = new int[r + 1]; // Pyramid: rows get longer as they go down
+        for (int c = 0; c < r + 1; c++) replicaPyramid[r][c] = pyramidArr[r][c]; // Fill the row
+    }
+
     // Make copy of the starting stock to modify
-    std::vector<int> *currentStock = new std::vector<int>(*stock);
+    std::vector<int> *replicaStock = new std::vector<int>(*stock);
     
-    // Go through all moves made and reconstruct the game state in touchables and currentStock
+    // Go through all moves made and reconstruct the game state in the replica pyramid and stock
     for (CardPair* move : *moveList) {
-        // Just make sure the cards sum to 13, just in case...
-        if (pyramidArr[move->card1.row][move->card1.pos] + pyramidArr[move->card2.row][move->card2.pos] != 13) {
+        // For ease of reading, let's create references to the cards used in the move
+        const Card &c1 = *(move->card1);
+        const Card &c2 = *(move->card2);
+        
+        // Safety check: make sure we didn't match a card with itself
+        if (c1.row == c2.row && c1.pos == c2.pos) {
+            std::cerr << "Fundamental moveList error! A move describes two of the same card" << std::endl;
+            exit(1);
+        }
+        // Another safety check: make sure the cards actually sum to 13
+        if (replicaPyramid[c1.row][c1.pos] + replicaPyramid[c2.row][c2.pos] != 13) {
             std::cerr << "Fundamental moveList error! Cards in move do not sum to 13" << std::endl;
             exit(1);
         }
 
+        // Remember, a row value of -1 means the card specified is on the stock
+        if (c1.row == -1) replicaStock->erase(replicaStock->begin() + c1.pos); // Remove from stock
+        else replicaPyramid[c1.row][c1.pos] = 0; // Clear card on pyramid
+        
+        // Same thing for card 2
+        if (c2.row == -1) replicaStock->erase(replicaStock->begin() + c2.pos); // Remove from stock
+        else replicaPyramid[c2.row][c2.pos] = 0; // Clear card on pyramid
     }
+
+    // Just printing the pyramid
+    std::cout << "Test print:" << std::endl;
+    for (int i = 0; i < 7; i++) {
+        for (int j = 0; j < i + 1; j++) std::cout << replicaPyramid[i][j] << " ";
+        std::cout << std::endl;
+    }
+
+    std::vector<Card*> *touchables = new std::vector<Card*>();
+    // TODO: done making moves, time to enumerate the touchable cards
+    //       Loop over the whole pyramid: if both children are 0 and current card is not, add to touchables
     
-    // For all valid combinations of cards on either the pyramid or the stock:
-    // Init each one as a node in this vector's nextlist
+    // TODO: For all valid combinations of cards in touchables and/or the stock:
+    //       Init each one as a node in this vector's nextlist (since it's a valid next move)
     
     // Done calculating the game state, so we can free some space up on the stack
-    delete touchables;
-    delete stock;
+    delete[] replicaPyramid;
 
-    // Loop over nextlist again and recurse for each one (breadth-first strat)
+    // TODO: Loop over nextlist again and recurse for each one (breadth-first strat)
 
     return NULL;
 }

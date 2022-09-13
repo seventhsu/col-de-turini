@@ -22,8 +22,8 @@ typedef struct PyramidCardStruct {
 
 typedef struct MatchingPairStruct {
 	// If card is from stock, row = -1 and pos will be position from top of stock
-	Card card1;
-	Card card2;
+	Card *card1;
+	Card *card2;
 } CardPair;
 
 typedef struct MatchTreeNodeStruct {
